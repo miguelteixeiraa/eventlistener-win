@@ -53,8 +53,7 @@ HRESULT STDMETHODCALLTYPE WinEventListener::QueryInterface(REFIID riid, void** p
         *ppInterface = static_cast<IUIAutomationEventHandler*>(this);
     else if (riid == __uuidof(IUIAutomationEventHandler))
         *ppInterface = static_cast<IUIAutomationEventHandler*>(this);
-    else
-    {
+    else{
         *ppInterface = NULL;
         return E_NOINTERFACE;
     }
@@ -80,8 +79,7 @@ HRESULT STDMETHODCALLTYPE WinEventListener::HandleAutomationEvent(IUIAutomationE
 void WinEventListener::listenerStart(){
     auto cleanup = [](auto &pAutomation_var, auto &hr_var, auto &pTargetElement_var, auto &ret_var, auto &pEHTemp_var) {
         // Remove event handlers, release resources, and terminate
-        if (pAutomation_var != NULL)
-        {
+        if (pAutomation_var != NULL){
             hr_var = pAutomation_var->RemoveAllEventHandlers();
             if (FAILED(hr_var))
                 ret_var = 1;
