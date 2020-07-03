@@ -34,4 +34,4 @@ With this library you should be able to capture all Microsoft UIAutomation event
 MontorableUIAutoEvents.h
 ```
 
-This readme will be written one day.
+This readme will be completely written one day.
