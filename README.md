@@ -2,11 +2,12 @@
 
 **Usage:**
 
-```
-#include <QCoreApplication>
-#include <wineventlistener.h>
+```cpp
 #include <QList>
 #include <QString>
+
+#include <wineventlistener.h>
+
 int main(int argc, char *argv[])
 {
     //Create a WinEventListener
@@ -24,7 +25,6 @@ int main(int argc, char *argv[])
     //And.. have fun!
     w.listenerStart();
 
-    QCoreApplication a(argc, argv);
     return a.exec();
 }
 ```
