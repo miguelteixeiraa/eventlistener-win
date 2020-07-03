@@ -1,6 +1,7 @@
 #include "wineventlistener.h"
 
 
+
 WinEventListener::WinEventListener() : _refCount(1){}
 
 void WinEventListener::addEventsToIdentify(const QList<QString> &list){
@@ -65,27 +66,14 @@ HRESULT STDMETHODCALLTYPE WinEventListener::HandleAutomationEvent(IUIAutomationE
     static BSTR eventType, eventName, applicationName;
 
     auto bstrToQString = [](const BSTR &b){
-        if(b == nullptr){
-            return QString("");
-        }
-        long size = WideCharToMultiByte(CP_UTF8, 0, b, -1, nullptr, 0, nullptr, nullptr);
-        if(size <= 0){
-            return QString("");
-        }
-        char *tmp_buffer = new char[size];
-        WideCharToMultiByte(CP_UTF8, 0, b, -1, tmp_buffer, size, nullptr, nullptr);
-        QString  buff = tmp_buffer;
-        buff = buff.toUtf8();
-        return buff;
-        //return QString::fromUtf16(reinterpret_cast<ushort*>(b)).toUtf8();
+        QString tmp = QString::fromUtf16(reinterpret_cast<ushort*>(b)).toUtf8();
+        return tmp.simplified();
     };
 
     pSender->get_CurrentName(&eventName);
     eventCatched["Event name"] = bstrToQString(eventName);
-    if(eventCatched["Event name"] == "1 nova notificação")
-        qDebug() << QStringLiteral("1 nova notificação");
-        //std::cout << QStringLiteral("1 nova notificação") << std::endl;
 
+    qDebug() << eventCatched["Event name"];
     return S_OK;
 }
 
@@ -152,7 +140,3 @@ void WinEventListener::listenerStart(){
 
     qDebug() << "-Removing Event Handlers.\n";
 }
-
-
-
-
