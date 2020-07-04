@@ -17,6 +17,4 @@ int main(int argc, char *argv[])
     WinEventListener w;
     w.addEventsToIdentify(event_list);
     w.listenerStart();
-
-    return a.exec();
 }
