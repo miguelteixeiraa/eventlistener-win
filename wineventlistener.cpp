@@ -10,7 +10,7 @@ void WinEventListener::addEventsToIdentify(const QList<QString> &list){
             eventsToIdentify.append(event);
         }
         else{
-            std::cout << "The  event: " << event.toStdString() << " is not valid\n";
+            std::cout << event.toStdString() << " is not a valid event name,\n";
         }
     }
 }
