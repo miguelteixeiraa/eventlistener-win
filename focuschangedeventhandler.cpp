@@ -1,7 +1,6 @@
 #include "focuschangedeventhandler.h"
 
-FocusChangedEventHandler::FocusChangedEventHandler(QMap<QString, QString> &eventDetected_addr) : _refCount(1), _eventCount(0)
-{
+FocusChangedEventHandler::FocusChangedEventHandler(QMap<QString, QString> &eventDetected_addr) : _refCount(1), _eventCount(0){
     eventDetected_focusChange = &eventDetected_addr;
 }
 
@@ -11,11 +10,9 @@ ULONG STDMETHODCALLTYPE FocusChangedEventHandler::AddRef(){
     return ret;
 }
 
-ULONG STDMETHODCALLTYPE FocusChangedEventHandler::Release()
-{
+ULONG STDMETHODCALLTYPE FocusChangedEventHandler::Release(){
     ULONG ret = InterlockedDecrement(&_refCount);
-    if (ret == 0)
-    {
+    if (ret == 0){
         delete this;
         return 0;
     }
@@ -23,12 +20,13 @@ ULONG STDMETHODCALLTYPE FocusChangedEventHandler::Release()
 }
 
 HRESULT STDMETHODCALLTYPE FocusChangedEventHandler::QueryInterface(REFIID riid, void** ppInterface){
-    if (riid == __uuidof(IUnknown))
+    if (riid == __uuidof(IUnknown)){
         *ppInterface = static_cast<IUIAutomationFocusChangedEventHandler*>(this);
-    else if (riid == __uuidof(IUIAutomationFocusChangedEventHandler))
+    }
+    else if (riid == __uuidof(IUIAutomationFocusChangedEventHandler)){
         *ppInterface = static_cast<IUIAutomationFocusChangedEventHandler*>(this);
-    else
-    {
+    }
+    else{
         *ppInterface = NULL;
         return E_NOINTERFACE;
     }
@@ -61,7 +59,6 @@ void FocusChangedEventHandler::startHandler(){
         if (pAutomation_var != NULL){
             pAutomation_var->Release();
         }
-
         CoUninitialize();
         return ret_var;
     };
@@ -95,7 +92,7 @@ void FocusChangedEventHandler::startHandler(){
 
     qDebug() << "Removing Event Handlers.\n";
     hr = pAutomation->RemoveFocusChangedEventHandler((IUIAutomationFocusChangedEventHandler*) pEHTemp);
-    if (FAILED(hr)) {
+    if (FAILED(hr)){
         ret = 1;
         cleanup(pAutomation, hr, pEHTemp, ret);
     }
