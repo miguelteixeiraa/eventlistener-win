@@ -1,20 +1,28 @@
 #include <QList>
+#include <QMap>
 #include <QString>
-#include <clocale>
+#include <QDebug>
 
 #include <wineventlistener.h>
 
 
 int main(int argc, char *argv[])
 {
-    setlocale(LC_ALL, "portuguese-brazilian");
-    
-    QList<QString> event_list{
+    WinEventListener *listener = new WinEventListener();
+    QList<QString> events{
         "UIA_ToolTipOpenedEventId",
-        "UIA_ToolTipClosedEventId"
+        "UIA_ToolTipClosedEventId",
+        "UIA_AutomationFocusChangedEventId",
     };
+    listener->addEventsToIdentify(events);
+    listener->listenerStart();
 
-    WinEventListener w;
-    w.addEventsToIdentify(event_list);
-    w.listenerStart();
+    while(true){
+        qDebug() << listener->eventDetected;
+    }
+
+    //general.addEventsToIdentify(events);
+    //general.startHandler();
+    //FocusChangedEventHandler *fceh = new FocusChangedEventHandler;
+    //fceh->startHandler();
 }

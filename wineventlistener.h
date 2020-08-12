@@ -1,49 +1,35 @@
 #ifndef WINEVENTLISTENER_H
 #define WINEVENTLISTENER_H
 
-#include <windows.h>
-#include <UIAutomation.h>
-
 #include <QDebug>
+#include <QObject>
 #include <QMap>
 #include <QList>
-#include <iostream>
 #include <QString>
+#include <QThread>
 
-#include "MonitorableUIAutoEvents.h"
+#include <focuschangedeventhandler.h>
+#include <generaleventshandler.h>
 
 
-class WinEventListener : public IUIAutomationEventHandler{
-    const QMap<QString, long>* mUIAutoEvents = &uiAutoMonitorableEvents;
-    QList<QString> eventsToIdentify;
-    QMap<QString, QString> eventCatched{
-        {"Event type", ""},
-        {"Event name", ""},
-        {"Application name", ""}
+class WinEventListener : public QObject
+{
+    Q_OBJECT
+
+    FocusChangedEventHandler *focusChangedEventHandler = NULL;
+    GeneralEventsHandler *generalEventsHandler = NULL;
+
+    QList<QString> nonGeneralEventIDs = {
+        "UIA_AutomationFocusChangedEventId",
+        "UIA_AutomationPropertyChangedEventId",
+        "UIA_StructureChangedEventId"
     };
 
 public:
+    QMap<QString, QString> *eventDetected = new QMap<QString, QString>;
     explicit WinEventListener();
-
     void addEventsToIdentify(const QList<QString> &list);
-
-    const QMap<QString, long>* getAllUIAutoMonitorableEvents();
-
-    QMap<QString, QString>* getEventCatched();
-
-    void printEventCatched();
-    
     void listenerStart();
-
-    // Start UIAutomation stuff to event listener to work
-    ULONG STDMETHODCALLTYPE Release();
-    HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppInterface);
-    HRESULT STDMETHODCALLTYPE HandleAutomationEvent(IUIAutomationElement* pSender, EVENTID eventID);
-    ULONG STDMETHODCALLTYPE AddRef();
-    // End UIAutomation stuff to event listener to work
-
-private:
-    LONG _refCount;
     
 };
 

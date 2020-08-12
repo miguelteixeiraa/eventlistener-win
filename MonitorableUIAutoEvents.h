@@ -7,10 +7,7 @@
 static const QMap<QString, long> uiAutoMonitorableEvents{
     {"UIA_ToolTipOpenedEventId", 20000},
     {"UIA_ToolTipClosedEventId", 20001},
-    {"UIA_StructureChangedEventId", 20002},
     {"UIA_MenuOpenedEventId", 20003},
-    {"UIA_AutomationPropertyChangedEventId", 20004},
-    {"UIA_AutomationFocusChangedEventId", 20005},
     {"UIA_AsyncContentLoadedEventId", 20006},
     {"UIA_MenuClosedEventId", 20007},
     {"UIA_LayoutInvalidatedEventId", 20008},
