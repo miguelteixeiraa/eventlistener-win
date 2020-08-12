@@ -1,7 +1,6 @@
 #include "generaleventshandler.h"
 
-GeneralEventsHandler::GeneralEventsHandler(QMap<QString, QString> &eventDetected_addr) : _refCount(1), _eventCount(0)
-{
+GeneralEventsHandler::GeneralEventsHandler(QMap<QString, QString> &eventDetected_addr) : _refCount(1), _eventCount(0){
     eventDetected_general = &eventDetected_addr;
 }
 
@@ -21,7 +20,7 @@ ULONG STDMETHODCALLTYPE GeneralEventsHandler::AddRef(){
 
 ULONG STDMETHODCALLTYPE GeneralEventsHandler::Release(){
     ULONG ret = InterlockedDecrement(&_refCount);
-    if (ret == 0) {
+    if (ret == 0){
         delete this;
         return 0;
     }
@@ -29,12 +28,13 @@ ULONG STDMETHODCALLTYPE GeneralEventsHandler::Release(){
 }
 
 HRESULT STDMETHODCALLTYPE GeneralEventsHandler::QueryInterface(REFIID riid, void** ppInterface){
-    if (riid == __uuidof(IUnknown))
+    if (riid == __uuidof(IUnknown)){
         *ppInterface=static_cast<IUIAutomationEventHandler*>(this);
-    else if (riid == __uuidof(IUIAutomationEventHandler))
+    }
+    else if (riid == __uuidof(IUIAutomationEventHandler)){
         *ppInterface=static_cast<IUIAutomationEventHandler*>(this);
-    else
-    {
+    }
+    else{
         *ppInterface = NULL;
         return E_NOINTERFACE;
     }
@@ -59,7 +59,6 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent(IUIAutomat
             //qDebug() << event + " Received! " + bstrToQString(eventName);
         }
     }
-
     return S_OK;
 }
 
