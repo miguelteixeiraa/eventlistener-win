@@ -1,28 +1,20 @@
 #include "wineventlistener.h"
 
 
-
 WinEventListener::WinEventListener()
 {
 }
 
 void WinEventListener::addEventsToIdentify(const QList<QString> &list){
     QList<QString> *generalEvents = new QList<QString>;
+    if(list.contains("UIA_AutomationFocusChangedEventId"){
+        focusChangedEventHandler = new FocusChangedEventHandler(*eventDetected);
+     }
     for(auto eventID : list){
-        if(nonGeneralEventIDs.contains(eventID) && eventID == "UIA_StructureChangedEventId"){
-            qDebug() << "Could not add event " + eventID;
-        }
-        else if(nonGeneralEventIDs.contains(eventID) && eventID == "UIA_AutomationPropertyChangedEventId"){
-            qDebug() << "Could not add event " + eventID;
-        }
-        else if(nonGeneralEventIDs.contains(eventID) && eventID == "UIA_AutomationFocusChangedEventId"){
-            focusChangedEventHandler = new FocusChangedEventHandler(*eventDetected);
-        }
-        else{
+        if(!nonGeneralEventIDs.contains(eventID){
             generalEvents->append(eventID);
         }
     }
-
     generalEventsHandler = new GeneralEventsHandler(*eventDetected);
     generalEventsHandler->addEventsToIdentify(*generalEvents);
 }
