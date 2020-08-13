@@ -8,21 +8,32 @@
 
 int main(int argc, char *argv[])
 {
-    WinEventListener *listener = new WinEventListener();
-    QList<QString> events{
+    // to receive the event identified by the listener
+    QMap<QString, QString> eventDetected;
+
+    /* Variable with QList with all events to be identified
+     * To know all suported events, see:
+     * https://docs.microsoft.com/en-us/windows/win32/winauto/uiauto-event-ids
+     */
+    QList<QString> eventsToIdenfify{
         "UIA_ToolTipOpenedEventId",
         "UIA_ToolTipClosedEventId",
         "UIA_AutomationFocusChangedEventId",
     };
-    listener->addEventsToIdentify(events);
+
+    // Create an event listener
+    WinEventListener *listener = new WinEventListener();
+
+    // Add events you want identify
+    listener->addEventsToIdentify(eventsToIdenfify);
+
+    // And.. have fun!
     listener->listenerStart();
 
     while(true){
-        qDebug() << listener->eventDetected;
+        if(eventDetected != *listener->eventDetected){
+            eventDetected = *listener->eventDetected;
+            qDebug() << eventDetected;
+        }
     }
-
-    //general.addEventsToIdentify(events);
-    //general.startHandler();
-    //FocusChangedEventHandler *fceh = new FocusChangedEventHandler;
-    //fceh->startHandler();
 }

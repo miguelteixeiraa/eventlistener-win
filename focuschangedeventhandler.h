@@ -1,7 +1,9 @@
 #ifndef FOCUSCHANGEDEVENTHANDLER_H
 #define FOCUSCHANGEDEVENTHANDLER_H
+
 #include <UIAnimation.h>
 #include <UIAutomationClient.h>
+
 #include <QDebug>
 #include <QString>
 

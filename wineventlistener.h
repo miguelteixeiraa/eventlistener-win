@@ -11,13 +11,37 @@
 #include <focuschangedeventhandler.h>
 #include <generaleventshandler.h>
 
+class FocusChangedEventWorker : public QObject
+{
+    Q_OBJECT
+public:
+    explicit FocusChangedEventWorker(QMap<QString, QString> &worker_eventDetected);
+    FocusChangedEventHandler *focusChangedEventHandler = NULL;
+public slots:
+    void doWork();
+
+};
+
+class GeneralEventsWorker : public QObject
+{
+    Q_OBJECT
+public:
+    explicit GeneralEventsWorker(QMap<QString, QString> &worker_eventDetected);
+    void addEventsToIdentify(QList<QString> &w_eventsToIdentify);
+    GeneralEventsHandler *generalEventsHandler = NULL;
+
+public slots:
+    void doWork();
+
+};
+
 
 class WinEventListener : public QObject
 {
     Q_OBJECT
 
-    FocusChangedEventHandler *focusChangedEventHandler = NULL;
-    GeneralEventsHandler *generalEventsHandler = NULL;
+    FocusChangedEventWorker *w_focusChangedEvent = NULL;
+    GeneralEventsWorker *w_generalEvents = NULL;
 
     QList<QString> nonGeneralEventIDs = {
         "UIA_AutomationFocusChangedEventId",

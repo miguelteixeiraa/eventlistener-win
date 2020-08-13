@@ -1,35 +1,53 @@
 # Event listener for Windows
 
+
 **Usage:**
 
 ```cpp
 #include <QList>
+#include <QMap>
 #include <QString>
+#include <QDebug>
 
 #include <wineventlistener.h>
 
+
 int main(int argc, char *argv[])
 {
-    //Create a WinEventListener
-    WinEventListener w;
+    // to receive the event identified by the listener
+    QMap<QString, QString> eventDetected;
 
-    //Events to watch
-    QList<QString> q{
+    /* Variable with QList with all events to be identified
+     * To know all suported events, see:
+     * https://docs.microsoft.com/en-us/windows/win32/winauto/uiauto-event-ids
+     */
+    QList<QString> eventsToIdenfify{
         "UIA_ToolTipOpenedEventId",
-        "UIA_ToolTipClosedEventId"
+        "UIA_ToolTipClosedEventId",
+        "UIA_AutomationFocusChangedEventId",
     };
 
-    //Add events that you wanna watch to your listener
-    w.addEventsToIdentify(q);
+    // Create an event listener
+    WinEventListener *listener = new WinEventListener();
 
-    //And.. have fun!
-    w.listenerStart();
+    // Add events you want identify
+    listener->addEventsToIdentify(eventsToIdenfify);
+
+    // And.. have fun!
+    listener->listenerStart();
+
+    while(true){
+        if(eventDetected != *listener->eventDetected){
+            eventDetected = *listener->eventDetected;
+            qDebug() << eventDetected;
+        }
+    }
 }
 ```
 
 With this library you should be able to capture all Microsoft UIAutomation events present here:
 ```
-MontorableUIAutoEvents.h
+https://docs.microsoft.com/en-us/windows/win32/winauto/uiauto-event-ids
 ```
 
 This readme will be completely written one day.

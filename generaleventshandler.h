@@ -1,12 +1,14 @@
 #ifndef GENERALEVENTSHANDLER_H
 #define GENERALEVENTSHANDLER_H
+
 #include <UIAnimation.h>
 #include <UIAutomationClient.h>
-#include <MonitorableUIAutoEvents.h>
+
 #include <QList>
 #include <QString>
 #include <QDebug>
-#include <iostream>
+
+#include <MonitorableUIAutoEvents.h>
 
 
 class GeneralEventsHandler : public IUIAutomationEventHandler
