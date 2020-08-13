@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     // to receive the event identified by the listener
     QMap<QString, QString> eventDetected;
 
-    /* Variable with QList with all events to be identified
+    /* QList with all events to be identified
      * To know all suported events, see:
      * https://docs.microsoft.com/en-us/windows/win32/winauto/uiauto-event-ids
      */
