@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
      * To know all suported events, see:
      * https://docs.microsoft.com/en-us/windows/win32/winauto/uiauto-event-ids
      */
-    QList<QString> eventsToIdenfify{
+    QList<QString> eventsToIdentify{
         "UIA_ToolTipOpenedEventId",
         "UIA_ToolTipClosedEventId",
         "UIA_AutomationFocusChangedEventId",
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     WinEventListener *listener = new WinEventListener();
 
     // Add events you want identify
-    listener->addEventsToIdentify(eventsToIdenfify);
+    listener->addEventsToIdentify(eventsToIdentify);
 
     // And.. have fun!
     listener->listenerStart();
