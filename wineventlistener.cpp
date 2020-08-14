@@ -1,7 +1,6 @@
 #include "wineventlistener.h"
 
-
-
+// start FocusChangedEventWorker
 FocusChangedEventWorker::FocusChangedEventWorker(QMap<QString, QString> &worker_eventDetected){
     focusChangedEventHandler = new FocusChangedEventHandler(worker_eventDetected);
 }
@@ -9,8 +8,9 @@ FocusChangedEventWorker::FocusChangedEventWorker(QMap<QString, QString> &worker_
 void FocusChangedEventWorker::doWork(){
     focusChangedEventHandler->startHandler();
 }
+// end FocusChangedEventWorker
 
-
+// start GeneralEventsWorker
 GeneralEventsWorker::GeneralEventsWorker(QMap<QString, QString> &worker_eventDetected){
     generalEventsHandler = new GeneralEventsHandler(worker_eventDetected);
 }
@@ -22,9 +22,9 @@ void GeneralEventsWorker::addEventsToIdentify(QList<QString> &w_eventsToIdentify
 void GeneralEventsWorker::doWork(){
     generalEventsHandler->startHandler();
 }
+// end GeneralEventsWorker
 
-
-
+// start WinEventListener
 WinEventListener::WinEventListener()
 {
 }
@@ -57,3 +57,4 @@ void WinEventListener::listenerStart(){
         t_generalEventsWorker->start();
     }
 }
+// end WinEventListener
