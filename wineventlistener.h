@@ -11,6 +11,7 @@
 #include <focuschangedeventhandler.h>
 #include <generaleventshandler.h>
 
+
 class FocusChangedEventWorker : public QObject
 {
     Q_OBJECT
