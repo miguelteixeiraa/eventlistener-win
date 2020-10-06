@@ -1,6 +1,6 @@
 #include "generaleventshandler.h"
 
-GeneralEventsHandler::GeneralEventsHandler(QMap<QString, QString> &eventDetected_addr) : _refCount(1), _eventCount(0){
+GeneralEventsHandler::GeneralEventsHandler(QVariantMap &eventDetected_addr): _refCount(1), _eventCount(0){
     eventDetected_general = &eventDetected_addr;
 }
 

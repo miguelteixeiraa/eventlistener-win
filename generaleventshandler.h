@@ -7,21 +7,22 @@
 #include <QList>
 #include <QString>
 #include <QDebug>
+#include <QVariantMap>
 
-#include <MonitorableUIAutoEvents.h>
+#include <eventlistener-win/MonitorableUIAutoEvents.h>
 
 
 class GeneralEventsHandler : public IUIAutomationEventHandler
 {
 public:
-    GeneralEventsHandler(QMap<QString, QString> &eventDetected_addr);
+    GeneralEventsHandler(QVariantMap &eventDetected_addr);
     void addEventsToIdentify(const QList<QString> &q);
     void startHandler();
 
     const QMap<QString, long>* mUIAutoEvents = &uiAutoMonitorableEvents;
 
     QList<QString> eventsToIdentify;
-    QMap<QString, QString> *eventDetected_general;
+    QVariantMap *eventDetected_general;
     int _eventCount;
 
     // IUnknown methods.

@@ -6,14 +6,15 @@
 
 #include <QDebug>
 #include <QString>
+#include <QVariantMap>
 
 
 class FocusChangedEventHandler : public IUIAutomationFocusChangedEventHandler
 {
 public:
     int _eventCount;
-    QMap<QString, QString> *eventDetected_focusChange;
-    FocusChangedEventHandler(QMap<QString, QString> &eventDetected_addr);
+    QVariantMap *eventDetected_focusChange;
+    FocusChangedEventHandler(QVariantMap &eventDetected_addr);
     void startHandler();
 
     //IUnknown methods.
