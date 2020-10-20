@@ -5,7 +5,7 @@ FocusChangedEventWorker::FocusChangedEventWorker(QVariantMap &worker_eventDetect
     focusChangedEventHandler = new FocusChangedEventHandler(worker_eventDetected);
 }
 
-void FocusChangedEventWorker::doWork(){
+void FocusChangedEventWorker::run(){
     focusChangedEventHandler->startHandler();
 }
 // end FocusChangedEventWorker
@@ -19,7 +19,7 @@ void GeneralEventsWorker::addEventsToIdentify(QList<QString> &w_eventsToIdentify
     generalEventsHandler->addEventsToIdentify(w_eventsToIdentify);
 }
 
-void GeneralEventsWorker::doWork(){
+void GeneralEventsWorker::run(){
     generalEventsHandler->startHandler();
 }
 // end GeneralEventsWorker
@@ -48,16 +48,15 @@ QVariantMap WinEventListener::getEventDetected(){
 
 void WinEventListener::listenerStart(){
     if(w_generalEvents != NULL){
-        QThread *t_generalEventsWorker = new QThread;
-        w_generalEvents->moveToThread(t_generalEventsWorker);
-        connect(t_generalEventsWorker, SIGNAL(started()), w_generalEvents, SLOT(doWork()));
-        t_generalEventsWorker->start();
+        //
+        qDebug() << "I'm here";
     }
     if(w_focusChangedEvent != NULL){
-        QThread *t_focusChangedEventWorker = new QThread;
-        w_focusChangedEvent->moveToThread(t_focusChangedEventWorker);
-        connect(t_focusChangedEventWorker, SIGNAL(started()), w_focusChangedEvent, SLOT(doWork()));
-        t_focusChangedEventWorker->start();
+
+        qDebug() << "I'm here";
     }
+    QThreadPool::globalInstance()->start(w_focusChangedEvent);
+    QThread::sleep(5);
+    QThreadPool::globalInstance()->start(w_generalEvents);
 }
 // end WinEventListener

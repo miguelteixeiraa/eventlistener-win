@@ -38,8 +38,21 @@ HRESULT STDMETHODCALLTYPE FocusChangedEventHandler::QueryInterface(REFIID riid, 
 HRESULT STDMETHODCALLTYPE FocusChangedEventHandler::HandleFocusChangedEvent(IUIAutomationElement * pSender){
     BSTR eventName;
     auto bstrToQString = [](const BSTR &b){
-        QString tmp = QString::fromUtf16(reinterpret_cast<ushort*>(b)).toUtf8();
-        return tmp.simplified();
+        QString tmp_result = QString::fromUtf16(reinterpret_cast<ushort*>(b)).toLocal8Bit().data();
+        tmp_result.replace(tmp_result.indexOf("("), tmp_result.length()-1);
+        QString removeF = "F";
+        for (auto n=1; n<13; n++){
+            QString tmp_removeF = removeF + QString::number(n);
+            if(tmp_result.contains(tmp_removeF)){
+                tmp_result.replace(tmp_result.indexOf(tmp_removeF), tmp_result.length()-1);
+            }
+        }
+        if(tmp_result.contains("(")){
+            tmp_result.replace(tmp_result.indexOf("("), tmp_result.length()-1);
+        }
+        tmp_result = tmp_result.toLower();
+        qDebug() << tmp_result.simplified();
+        return tmp_result.simplified();
     };
 
     pSender->get_CurrentName(&eventName);

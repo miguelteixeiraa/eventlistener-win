@@ -6,35 +6,30 @@
 #include <QVariantMap>
 #include <QList>
 #include <QString>
-#include <QThread>
 #include <QMap>
+#include <QRunnable>
+#include <QThreadPool>
+#include <QThread>
 
 #include <eventlistener-win/focuschangedeventhandler.h>
 #include <eventlistener-win/generaleventshandler.h>
 
 
-class FocusChangedEventWorker : public QObject
+class FocusChangedEventWorker : public QRunnable
 {
-    Q_OBJECT
 public:
     explicit FocusChangedEventWorker(QVariantMap &worker_eventDetected);
     FocusChangedEventHandler *focusChangedEventHandler = NULL;
-public slots:
-    void doWork();
-
+    void run() override;
 };
 
-class GeneralEventsWorker : public QObject
+class GeneralEventsWorker : public QRunnable
 {
-    Q_OBJECT
 public:
     explicit GeneralEventsWorker(QVariantMap &worker_eventDetected);
     void addEventsToIdentify(QList<QString> &w_eventsToIdentify);
     GeneralEventsHandler *generalEventsHandler = NULL;
-
-public slots:
-    void doWork();
-
+    void run() override;
 };
 
 
@@ -52,7 +47,6 @@ class WinEventListener : public QObject
     };
 
 public:
-    QThread *t_WinEventListener = new QThread;
     QVariantMap *eventDetected = new QVariantMap;
     Q_PROPERTY(QVariantMap eventDetected READ getEventDetected);
     explicit WinEventListener();
