@@ -47,16 +47,14 @@ QVariantMap WinEventListener::getEventDetected(){
 }
 
 void WinEventListener::listenerStart(){
-    if(w_generalEvents != NULL){
-        //
-        qDebug() << "I'm here";
-    }
     if(w_focusChangedEvent != NULL){
-
+        QThreadPool::globalInstance()->start(w_focusChangedEvent);
         qDebug() << "I'm here";
     }
-    QThreadPool::globalInstance()->start(w_focusChangedEvent);
     QThread::sleep(5);
-    QThreadPool::globalInstance()->start(w_generalEvents);
+    if(w_generalEvents != NULL){
+        QThreadPool::globalInstance()->start(w_generalEvents);
+        qDebug() << "I'm here";
+    }
 }
 // end WinEventListener

@@ -46,30 +46,36 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::QueryInterface(REFIID riid, void
 HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent(IUIAutomationElement * pSender, EVENTID eventID){
     BSTR eventName;
     QString eventID_qstr;
+
     auto bstrToQString = [](const BSTR &b){
-        QString tmp_result = QString::fromUtf16(reinterpret_cast<ushort*>(b)).toLocal8Bit().data();
-        tmp_result.replace(tmp_result.indexOf("("), tmp_result.length()-1);
+        QString res = QString::fromUtf16(reinterpret_cast<ushort*>(b)).toLocal8Bit().data();
+        return res;
+    };
+
+    auto normalizeString = [](const QString &s){
+        QString res = s;
         QString removeF = "F";
         for (auto n=1; n<13; n++){
             QString tmp_removeF = removeF + QString::number(n);
-            if(tmp_result.contains(tmp_removeF)){
-                tmp_result.replace(tmp_result.indexOf(tmp_removeF), tmp_result.length()-1);
+            if(res.contains(tmp_removeF)){
+                res = res.replace(res.indexOf(tmp_removeF), res.length()-1, "");
             }
         }
-        if(tmp_result.contains("(")){
-            tmp_result.replace(tmp_result.indexOf("("), tmp_result.length()-1);
-        }
-        tmp_result = tmp_result.toLower();
-        qDebug() << tmp_result.simplified();
-        return tmp_result.simplified();
+        res = res.replace(res.indexOf("("), res.length()-1, "");
+        res = res.replace(res.indexOf("..."), res.length()-1, "");
+        res = res.replace(res.indexOf("crtl"), res.length()-1, "");
+        res = res.toLower();
+        QString res_normalized = res.normalized (QString::NormalizationForm_KD);
+        res_normalized.remove(QRegExp("[^a-zA-Z\\s]"));
+        return res_normalized.simplified();
     };
 
     pSender->get_CurrentName(&eventName);
     for(auto event : mUIAutoEvents->keys()){
         if(mUIAutoEvents->value(event) == eventID){
             eventDetected_general->insert("EventID", event);
-            eventDetected_general->insert("EventName", bstrToQString(eventName));
-            //qDebug() << event + " Received! " + bstrToQString(eventName);
+            eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
+            qDebug() << event + " Received! " + normalizeString(bstrToQString(eventName));
         }
     }
     return S_OK;
