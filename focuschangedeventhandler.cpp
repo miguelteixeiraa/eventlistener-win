@@ -52,10 +52,10 @@ HRESULT STDMETHODCALLTYPE FocusChangedEventHandler::HandleFocusChangedEvent(IUIA
                 res = res.replace(res.indexOf(tmp_removeF), res.length()-1, "");
             }
         }
+        res = res.toLower();
         res = res.replace(res.indexOf("("), res.length()-1, "");
         res = res.replace(res.indexOf("..."), res.length()-1, "");
-        res = res.replace(res.indexOf("crtl"), res.length()-1, "");
-        res = res.toLower();
+        res = res.replace(res.indexOf("ctrl"), res.length()-1, "");
         QString res_normalized = res.normalized (QString::NormalizationForm_KD);
         res_normalized.remove(QRegExp("[^a-zA-Z\\s]"));
         return res_normalized.simplified();
