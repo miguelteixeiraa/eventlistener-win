@@ -75,7 +75,7 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent(IUIAutomat
         if(mUIAutoEvents->value(event) == eventID){
             eventDetected_general->insert("EventID", event);
             eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
-            qDebug() << event + " Received! " + normalizeString(bstrToQString(eventName));
+            //qDebug() << event + " Received! " + normalizeString(bstrToQString(eventName));
         }
     }
     return S_OK;

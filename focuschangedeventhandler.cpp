@@ -65,7 +65,7 @@ HRESULT STDMETHODCALLTYPE FocusChangedEventHandler::HandleFocusChangedEvent(IUIA
 
     eventDetected_focusChange->insert("EventID", "FocusChangedEvent");
     eventDetected_focusChange->insert("EventName", normalizeString(bstrToQString(eventName)));
-    qDebug() << " Received! " + normalizeString(bstrToQString(eventName));
+    //qDebug() << " Received! " + normalizeString(bstrToQString(eventName));
     return S_OK;
 }
 
