@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     listener->listenerStart();
 
     while(true){
-        if(eventDetected != *listener->eventDetected){
+        if( eventDetected != *listener->eventDetected ){
             eventDetected = *listener->eventDetected;
             qDebug() << eventDetected;
         }

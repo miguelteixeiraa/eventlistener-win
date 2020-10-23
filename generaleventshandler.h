@@ -15,8 +15,8 @@
 class GeneralEventsHandler : public IUIAutomationEventHandler
 {
 public:
-    GeneralEventsHandler(QVariantMap &eventDetected_addr);
-    void addEventsToIdentify(const QList<QString> &q);
+    GeneralEventsHandler( QVariantMap &eventDetected_addr );
+    void addEventsToIdentify( const QList<QString> &q );
     void startHandler();
 
     const QMap<QString, long>* mUIAutoEvents = &uiAutoMonitorableEvents;
@@ -28,10 +28,10 @@ public:
     // IUnknown methods.
     ULONG STDMETHODCALLTYPE AddRef();
     ULONG STDMETHODCALLTYPE Release();
-    HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppInterface);
+    HRESULT STDMETHODCALLTYPE QueryInterface( REFIID riid, void** ppInterface );
 
     // IUIAutomationEventHandler methods
-    HRESULT STDMETHODCALLTYPE HandleAutomationEvent(IUIAutomationElement * pSender, EVENTID eventID);
+    HRESULT STDMETHODCALLTYPE HandleAutomationEvent( IUIAutomationElement * pSender, EVENTID eventID );
 
 private:
     LONG _refCount;

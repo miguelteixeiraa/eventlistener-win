@@ -18,7 +18,7 @@
 class FocusChangedEventWorker : public QRunnable
 {
 public:
-    explicit FocusChangedEventWorker(QVariantMap &worker_eventDetected);
+    explicit FocusChangedEventWorker( QVariantMap &worker_eventDetected );
     FocusChangedEventHandler *focusChangedEventHandler = NULL;
     void run() override;
 };
@@ -26,8 +26,8 @@ public:
 class GeneralEventsWorker : public QRunnable
 {
 public:
-    explicit GeneralEventsWorker(QVariantMap &worker_eventDetected);
-    void addEventsToIdentify(QList<QString> &w_eventsToIdentify);
+    explicit GeneralEventsWorker( QVariantMap &worker_eventDetected );
+    void addEventsToIdentify( QList<QString> &w_eventsToIdentify );
     GeneralEventsHandler *generalEventsHandler = NULL;
     void run() override;
 };
@@ -48,10 +48,10 @@ class WinEventListener : public QObject
 
 public:
     QVariantMap *eventDetected = new QVariantMap;
-    Q_PROPERTY(QVariantMap eventDetected READ getEventDetected);
     explicit WinEventListener();
-    Q_INVOKABLE void addEventsToIdentify(const QList<QString> &list);
+    Q_INVOKABLE void addEventsToIdentify( const QList<QString> &list );
     Q_INVOKABLE QVariantMap getEventDetected();
+
 public slots:
     Q_INVOKABLE void listenerStart();
 

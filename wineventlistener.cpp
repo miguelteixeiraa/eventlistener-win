@@ -1,7 +1,7 @@
 #include "wineventlistener.h"
 
 // start FocusChangedEventWorker
-FocusChangedEventWorker::FocusChangedEventWorker(QVariantMap &worker_eventDetected){
+FocusChangedEventWorker::FocusChangedEventWorker( QVariantMap &worker_eventDetected ){
     focusChangedEventHandler = new FocusChangedEventHandler(worker_eventDetected);
 }
 
@@ -11,11 +11,11 @@ void FocusChangedEventWorker::run(){
 // end FocusChangedEventWorker
 
 // start GeneralEventsWorker
-GeneralEventsWorker::GeneralEventsWorker(QVariantMap &worker_eventDetected){
+GeneralEventsWorker::GeneralEventsWorker( QVariantMap &worker_eventDetected ){
     generalEventsHandler = new GeneralEventsHandler(worker_eventDetected);
 }
 
-void GeneralEventsWorker::addEventsToIdentify(QList<QString> &w_eventsToIdentify){
+void GeneralEventsWorker::addEventsToIdentify( QList<QString> &w_eventsToIdentify ){
     generalEventsHandler->addEventsToIdentify(w_eventsToIdentify);
 }
 
@@ -28,18 +28,18 @@ void GeneralEventsWorker::run(){
 WinEventListener::WinEventListener(){
 }
 
-void WinEventListener::addEventsToIdentify(const QList<QString> &list){
+void WinEventListener::addEventsToIdentify( const QList<QString> &list ){
     QList<QString> *generalEvents = new QList<QString>;
-    for(auto eventID : list){
+    for( auto eventID : list ){
         if(!nonGeneralEventIDs.contains(eventID)){
             generalEvents->append(eventID);
         }
     }
     w_generalEvents = new GeneralEventsWorker(*eventDetected);
     w_generalEvents->addEventsToIdentify(*generalEvents);
-    if(list.contains("UIA_AutomationFocusChangedEventId")){
+    if( list.contains("UIA_AutomationFocusChangedEventId") ){
         w_focusChangedEvent = new FocusChangedEventWorker(*eventDetected);
-    }  
+    }
 }
 
 QVariantMap WinEventListener::getEventDetected(){
@@ -47,14 +47,14 @@ QVariantMap WinEventListener::getEventDetected(){
 }
 
 void WinEventListener::listenerStart(){
-    if(w_focusChangedEvent != NULL){
+    if( w_focusChangedEvent != NULL ){
         QThreadPool::globalInstance()->start(w_focusChangedEvent);
-        qDebug() << "I'm here";
+        //qDebug() << "I'm here";
     }
     QThread::sleep(5);
-    if(w_generalEvents != NULL){
+    if( w_generalEvents != NULL ){
         QThreadPool::globalInstance()->start(w_generalEvents);
-        qDebug() << "I'm here";
+        //qDebug() << "I'm here";
     }
 }
 // end WinEventListener
