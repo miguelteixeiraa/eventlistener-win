@@ -54,22 +54,7 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent( IUIAutoma
 
     auto normalizeString = []( const QString &s ){
         QString res = s;
-
-        // removing F1, F2, F3, F4 ...
-        QString removeF = "F";
-        for ( auto n=1; n<13; n++ ){
-            QString tmp_removeF = removeF + QString::number(n);
-            if( res.contains( tmp_removeF ) ){
-                res = res.replace(res.indexOf(tmp_removeF), res.length()-1, "");
-            }
-        }
-
         res = res.toLower();
-
-        //removing (ctrl + ...), ctrl + ..., and "..."
-        res = res.replace( res.indexOf("("), res.length()-1, "" );
-        res = res.replace( res.indexOf("..."), res.length()-1, "" );
-        res = res.replace( res.indexOf("ctrl"), res.length()-1, "" );
 
         //removing accents and some characters like "ç"
         QString res_normalized = res.normalized (QString::NormalizationForm_KD);
