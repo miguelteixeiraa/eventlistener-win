@@ -129,9 +129,4 @@ void GeneralEventsHandler::startHandler(){
             cleanup(pAutomation, hr, pTargetElement, ret, pEHTemp_general);
         }
     }
-
-    //qDebug() << "Press any key to remove event handlers and exit\n";
-    getchar();
-
-    //qDebug() << "Removing Event Handlers.\n";
 }
