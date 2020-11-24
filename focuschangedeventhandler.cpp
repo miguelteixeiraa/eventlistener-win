@@ -98,13 +98,3 @@ void FocusChangedEventHandler::startHandler(){
         ret = 1;
         cleanup(pAutomation, hr, pEHTemp, ret);
     }
-    //qDebug() << "Press any key to remove event handler and exit";
-    getchar();
-
-    //qDebug() << "Removing Event Handlers.\n";
-    hr = pAutomation->RemoveFocusChangedEventHandler((IUIAutomationFocusChangedEventHandler*) pEHTemp);
-    if ( FAILED(hr) ){
-        ret = 1;
-        cleanup(pAutomation, hr, pEHTemp, ret);
-    }
-}
