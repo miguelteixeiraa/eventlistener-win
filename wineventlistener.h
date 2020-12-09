@@ -11,8 +11,8 @@
 #include <QThreadPool>
 #include <QThread>
 
-#include <eventlistener-win/focuschangedeventhandler.h>
-#include <eventlistener-win/generaleventshandler.h>
+#include <focuschangedeventhandler.h>
+#include <generaleventshandler.h>
 
 
 class FocusChangedEventWorker : public QRunnable

@@ -35,7 +35,9 @@ static const QMap<QString, long> uiAutoMonitorableEvents{
     {"UIA_DropTarget_DragLeaveEventId", 20030},
     {"UIA_DropTarget_DroppedEventId", 20031},
     {"UIA_TextEdit_TextChangedEventId", 20032},
-    {"UIA_TextEdit_ConversionTargetChangedEventId", 20033}
+    {"UIA_TextEdit_ConversionTargetChangedEventId", 20033},
+    {"UIA_HelpTextPropertyId", 30013},
+    {"UIA_IsOffscreenPropertyId", 30022}
 };
 
 #endif // MONITORABLEUIAUTOEVENTS_H

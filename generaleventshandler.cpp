@@ -48,28 +48,26 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent( IUIAutoma
     QString eventID_qstr;
 
     auto bstrToQString = []( const BSTR &b ){
-        QString res = QString::fromUtf16(reinterpret_cast<ushort*>(b)).toLocal8Bit().data();
-        return res;
+        std::wstring step1(b);
+        return QString::fromWCharArray(step1.c_str());
     };
 
     auto normalizeString = []( const QString &s ){
-        QString res = s;
-        res = res.toLower();
-
-        //removing accents and some characters like "ç"
-        QString res_normalized = res.normalized (QString::NormalizationForm_KD);
-        res_normalized.remove(QRegExp("[^a-zA-Z\\s]"));
-        return res_normalized.simplified();
+        auto result = s.normalized(QString::NormalizationForm_KD);
+        for ( auto chr : result ){
+            if( chr.unicode() > 255 ){
+                result.remove(chr);
+            }
+        }
+        return result;
     };
 
-    pSender->get_CurrentName(&eventName);
-    for( auto event : mUIAutoEvents->keys() ){
-        if( mUIAutoEvents->value(event) == eventID ){
-            eventDetected_general->insert("EventID", event);
-            eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
-            //qDebug() << event + " Received! " + normalizeString(bstrToQString(eventName));
-        }
-    }
+    eventDetected_general->insert("EventID", mUIAutoEvents->key(eventID));
+    eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
+    qDebug() <<  mUIAutoEvents->key(eventID) + " Received! " + normalizeString(bstrToQString(eventName));
+
+    pSender->Release();
+    Sleep(1000);
     return S_OK;
 }
 

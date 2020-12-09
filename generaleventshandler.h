@@ -8,8 +8,9 @@
 #include <QString>
 #include <QDebug>
 #include <QVariantMap>
+#include <QLatin1String>
 
-#include <eventlistener-win/MonitorableUIAutoEvents.h>
+#include <MonitorableUIAutoEvents.h>
 
 
 class GeneralEventsHandler : public IUIAutomationEventHandler
