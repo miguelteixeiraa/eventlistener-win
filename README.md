@@ -5,7 +5,7 @@
 
 ```cpp
 #include <QList>
-#include <QMap>
+#include <QVariantMap>
 #include <QString>
 #include <QDebug>
 
@@ -15,7 +15,7 @@
 int main(int argc, char *argv[])
 {
     // to receive the event identified by the listener
-    QMap<QString, QString> eventDetected;
+    QVariantMap eventDetected;
 
     /* QList with all events to be identified
      * To know all suported events, see:
@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
         "UIA_ToolTipOpenedEventId",
         "UIA_ToolTipClosedEventId",
         "UIA_AutomationFocusChangedEventId",
+        "UIA_Window_WindowClosedEventId",
     };
 
     // Create an event listener
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
         }
     }
 }
+
 ```
 
 With this library you should be able to capture all Microsoft UIAutomation events present here:
