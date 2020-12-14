@@ -1,7 +1,41 @@
 #include "focuschangedeventhandler.h"
 
-FocusChangedEventHandler::FocusChangedEventHandler( QVariantMap &eventDetected_addr ): _refCount(1), _eventCount(0){
+FocusChangedEventHandler::FocusChangedEventHandler(  QVariantMap &eventDetected_addr, const QString &v_eventsByAppName ): _refCount(1), _eventCount(0){
     eventDetected_focusChange = &eventDetected_addr;
+    if(v_eventsByAppName != "default"){
+        this->eventsByAppName.first = true;
+        this->eventsByAppName.second = v_eventsByAppName;
+    }
+    else{
+        this->eventsByAppName.first = false;
+        this->eventsByAppName.second == v_eventsByAppName;
+    }
+}
+
+DWORD FocusChangedEventHandler::findProcessIdByName( const QString &processName ){
+    PROCESSENTRY32 processInfo;
+    processInfo.dwSize = sizeof(processInfo);
+
+    HANDLE processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+    if ( processesSnapshot == INVALID_HANDLE_VALUE ) {
+        return 0;
+    }
+
+    Process32First(processesSnapshot, &processInfo);
+    if ( !processName.compare(processInfo.szExeFile) ){
+        CloseHandle(processesSnapshot);
+        return processInfo.th32ProcessID;
+    }
+
+    while ( Process32Next(processesSnapshot, &processInfo) ){
+        if ( !processName.compare(processInfo.szExeFile) ){
+            CloseHandle(processesSnapshot);
+            return processInfo.th32ProcessID;
+        }
+    }
+
+    CloseHandle(processesSnapshot);
+    return 0;
 }
 
 //IUnknown methods.
@@ -88,7 +122,7 @@ void FocusChangedEventHandler::startHandler(){
         cleanup(pAutomation, hr, pEHTemp, ret);
     }
 
-    pEHTemp = new FocusChangedEventHandler( *eventDetected_focusChange );
+    pEHTemp = new FocusChangedEventHandler( *eventDetected_focusChange, this->eventsByAppName.second );
     if ( pEHTemp == NULL ){
         ret = 1;
     }

@@ -3,19 +3,26 @@
 
 #include <UIAnimation.h>
 #include <UIAutomationClient.h>
+#include <tlhelp32.h>
+#include <string>
 
 #include <QDebug>
 #include <QString>
 #include <QVariantMap>
+#include <QPair>
+
 
 
 class FocusChangedEventHandler : public IUIAutomationFocusChangedEventHandler
 {
 public:
-    int _eventCount;
-    QVariantMap *eventDetected_focusChange;
-    FocusChangedEventHandler( QVariantMap &eventDetected_addr );
+    FocusChangedEventHandler( QVariantMap &eventDetected_addr, const QString &v_eventsByAppName );
+    DWORD findProcessIdByName( const QString &processName );
     void startHandler();
+
+    int _eventCount;    
+    QVariantMap *eventDetected_focusChange;
+    QPair<bool, QString> eventsByAppName; // ex.: true -> process_name
 
     //IUnknown methods.
     ULONG STDMETHODCALLTYPE AddRef();

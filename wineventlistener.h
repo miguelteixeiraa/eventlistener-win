@@ -18,7 +18,7 @@
 class FocusChangedEventWorker : public QRunnable
 {
 public:
-    explicit FocusChangedEventWorker( QVariantMap &worker_eventDetected );
+    explicit FocusChangedEventWorker( QVariantMap &worker_eventDetected, const QString &eventsByAppName );
     FocusChangedEventHandler *focusChangedEventHandler = NULL;
     void run() override;
 };
@@ -26,7 +26,7 @@ public:
 class GeneralEventsWorker : public QRunnable
 {
 public:
-    explicit GeneralEventsWorker( QVariantMap &worker_eventDetected );
+    explicit GeneralEventsWorker( QVariantMap &worker_eventDetected, const QString &eventsByAppName );
     void addEventsToIdentify( QList<QString> &w_eventsToIdentify );
     GeneralEventsHandler *generalEventsHandler = NULL;
     void run() override;
@@ -39,6 +39,7 @@ class WinEventListener : public QObject
 
     FocusChangedEventWorker *w_focusChangedEvent = NULL;
     GeneralEventsWorker *w_generalEvents = NULL;
+    QString WEL_eventsByAppName;
 
     QList<QString> nonGeneralEventIDs = {
         "UIA_AutomationFocusChangedEventId",
@@ -47,8 +48,8 @@ class WinEventListener : public QObject
     };
 
 public:
+    explicit WinEventListener( const QString &eventsByAppName = "default" );
     QVariantMap *eventDetected = new QVariantMap;
-    explicit WinEventListener();
     Q_INVOKABLE void addEventsToIdentify( const QList<QString> &list );
     Q_INVOKABLE QVariantMap getEventDetected();
 

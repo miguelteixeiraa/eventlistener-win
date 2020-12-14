@@ -1,8 +1,8 @@
 #include "wineventlistener.h"
 
 // start FocusChangedEventWorker
-FocusChangedEventWorker::FocusChangedEventWorker( QVariantMap &worker_eventDetected ){
-    focusChangedEventHandler = new FocusChangedEventHandler(worker_eventDetected);
+FocusChangedEventWorker::FocusChangedEventWorker( QVariantMap &worker_eventDetected, const QString &eventsByAppName ){
+    focusChangedEventHandler = new FocusChangedEventHandler(worker_eventDetected, eventsByAppName);
 }
 
 void FocusChangedEventWorker::run(){
@@ -11,8 +11,8 @@ void FocusChangedEventWorker::run(){
 // end FocusChangedEventWorker
 
 // start GeneralEventsWorker
-GeneralEventsWorker::GeneralEventsWorker( QVariantMap &worker_eventDetected ){
-    generalEventsHandler = new GeneralEventsHandler(worker_eventDetected);
+GeneralEventsWorker::GeneralEventsWorker( QVariantMap &worker_eventDetected, const QString &eventsByAppName ){
+    generalEventsHandler = new GeneralEventsHandler(worker_eventDetected, eventsByAppName);
 }
 
 void GeneralEventsWorker::addEventsToIdentify( QList<QString> &w_eventsToIdentify ){
@@ -25,7 +25,8 @@ void GeneralEventsWorker::run(){
 // end GeneralEventsWorker
 
 // start WinEventListener
-WinEventListener::WinEventListener(){
+WinEventListener::WinEventListener( const QString &eventsByAppName ){
+    this->WEL_eventsByAppName = eventsByAppName;
 }
 
 void WinEventListener::addEventsToIdentify( const QList<QString> &list ){
@@ -35,10 +36,10 @@ void WinEventListener::addEventsToIdentify( const QList<QString> &list ){
             generalEvents->append(eventID);
         }
     }
-    w_generalEvents = new GeneralEventsWorker(*eventDetected);
+    w_generalEvents = new GeneralEventsWorker(*eventDetected, this->WEL_eventsByAppName);
     w_generalEvents->addEventsToIdentify(*generalEvents);
     if( list.contains("UIA_AutomationFocusChangedEventId") ){
-        w_focusChangedEvent = new FocusChangedEventWorker(*eventDetected);
+        w_focusChangedEvent = new FocusChangedEventWorker(*eventDetected, this->WEL_eventsByAppName);
     }
 }
 

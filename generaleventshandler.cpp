@@ -1,7 +1,42 @@
 #include "generaleventshandler.h"
 
-GeneralEventsHandler::GeneralEventsHandler( QVariantMap &eventDetected_addr ): _refCount(1), _eventCount(0){
+GeneralEventsHandler::GeneralEventsHandler( QVariantMap &eventDetected_addr, const QString &v_eventsByAppName ): _refCount(1), _eventCount(0){
     eventDetected_general = &eventDetected_addr;
+    if(v_eventsByAppName != "default"){
+        this->eventsByAppName.first = true;
+        this->eventsByAppName.second = v_eventsByAppName;
+    }
+    else{
+        this->eventsByAppName.first = false;
+        this->eventsByAppName.second = v_eventsByAppName;
+    }
+}
+
+DWORD GeneralEventsHandler::findProcessIdByName( const QString &processName ){
+    PROCESSENTRY32 processInfo;
+    processInfo.dwSize = sizeof(PROCESSENTRY32);
+
+    HANDLE processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+    if ( processesSnapshot == INVALID_HANDLE_VALUE ) {
+        CloseHandle(processesSnapshot);
+        return 0;
+    }
+
+    Process32First(processesSnapshot, &processInfo);
+    if ( !processName.compare(processInfo.szExeFile) ){
+        CloseHandle(processesSnapshot);
+        return processInfo.th32ProcessID;
+    }
+
+    while ( Process32Next(processesSnapshot, &processInfo) ){
+        if ( !processName.compare(processInfo.szExeFile) ){
+            CloseHandle(processesSnapshot);
+            return processInfo.th32ProcessID;
+        }
+    }
+
+    CloseHandle(processesSnapshot);
+    return 0;
 }
 
 void GeneralEventsHandler::addEventsToIdentify( const QList<QString> &q ){
@@ -62,12 +97,27 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent( IUIAutoma
         return result;
     };
 
-    eventDetected_general->insert("EventID", mUIAutoEvents->key(eventID));
-    eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
-    qDebug() <<  mUIAutoEvents->key(eventID) + " Received! " + normalizeString(bstrToQString(eventName));
+    if(this->eventsByAppName.first){
+        long target_pid = findProcessIdByName(this->eventsByAppName.second);
+        //int target_pid = 0;
+        BSTR catched_description;
 
-    pSender->Release();
-    Sleep(1000);
+        pSender->get_CurrentProviderDescription(&catched_description);
+
+        auto qstr_targetPid = QString::number(target_pid);
+        auto qstr_catchedDescription = bstrToQString(catched_description);
+
+        if(qstr_catchedDescription.contains(qstr_targetPid)){
+            qDebug() << "Works!";
+        }
+    }
+
+    //eventDetected_general->insert("EventID", mUIAutoEvents->key(eventID));
+    //eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
+    //qDebug() <<  mUIAutoEvents->key(eventID) + " Received! " + normalizeString(bstrToQString(eventName));
+
+    //pSender->Release();
+    //Sleep(1000);
     return S_OK;
 }
 
@@ -113,7 +163,7 @@ void GeneralEventsHandler::startHandler(){
         cleanup(pAutomation, hr, pTargetElement, ret, pEHTemp_general);
     }
 
-    pEHTemp_general = new GeneralEventsHandler(*eventDetected_general);
+    pEHTemp_general = new GeneralEventsHandler(*eventDetected_general, this->eventsByAppName.second);
     if ( pEHTemp_general == NULL ){
         ret = 1;
         cleanup(pAutomation, hr, pTargetElement, ret, pEHTemp_general);
