@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     };
 
     // Create an event listener
-    WinEventListener *listener = new WinEventListener("soffice.exe");
+    WinEventListener *listener = new WinEventListener("soffice.bin");
 
     // Add events you want identify
     listener->addEventsToIdentify(eventsToIdentify);

@@ -6,6 +6,7 @@
 #include <tlhelp32.h>
 
 #include <QList>
+#include <QThread>
 #include <QString>
 #include <QVariantMap>
 #include <QPair>

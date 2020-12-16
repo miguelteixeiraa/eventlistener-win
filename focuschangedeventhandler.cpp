@@ -8,7 +8,7 @@ FocusChangedEventHandler::FocusChangedEventHandler(  QVariantMap &eventDetected_
     }
     else{
         this->eventsByAppName.first = false;
-        this->eventsByAppName.second == v_eventsByAppName;
+        this->eventsByAppName.second = v_eventsByAppName;
     }
 }
 
@@ -17,25 +17,25 @@ DWORD FocusChangedEventHandler::findProcessIdByName( const QString &processName 
     processInfo.dwSize = sizeof(processInfo);
 
     HANDLE processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-    if ( processesSnapshot == INVALID_HANDLE_VALUE ) {
-        return 0;
+    if (processesSnapshot == INVALID_HANDLE_VALUE) {
+        return FALSE;
     }
 
     Process32First(processesSnapshot, &processInfo);
-    if ( !processName.compare(processInfo.szExeFile) ){
+    if (!processName.compare(processInfo.szExeFile)){
         CloseHandle(processesSnapshot);
         return processInfo.th32ProcessID;
     }
 
-    while ( Process32Next(processesSnapshot, &processInfo) ){
-        if ( !processName.compare(processInfo.szExeFile) ){
+    while (Process32Next(processesSnapshot, &processInfo)){
+        if (!processName.compare(processInfo.szExeFile)){
             CloseHandle(processesSnapshot);
             return processInfo.th32ProcessID;
         }
     }
 
     CloseHandle(processesSnapshot);
-    return 0;
+    return FALSE;
 }
 
 //IUnknown methods.
@@ -87,12 +87,29 @@ HRESULT STDMETHODCALLTYPE FocusChangedEventHandler::HandleFocusChangedEvent( IUI
         return result;
     };
 
-    pSender->get_CurrentName(&eventName);
+    if(this->eventsByAppName.first){
+        long target_pid = findProcessIdByName(this->eventsByAppName.second);
+        int pSender_catchedPid;
 
-    eventDetected_focusChange->insert("EventID", "FocusChangedEvent");
-    eventDetected_focusChange->insert("EventName", normalizeString(bstrToQString(eventName)));
+        pSender->get_CurrentProcessId(&pSender_catchedPid);
 
-    pSender->Release();
+        if(pSender_catchedPid == (int)target_pid){
+            qDebug() << "by event PID: " + QString::number(target_pid);
+            pSender->get_CurrentName(&eventName);
+            eventDetected_focusChange->insert("EventID", "FocusChangedEvent");
+            eventDetected_focusChange->insert("EventName", normalizeString(bstrToQString(eventName)));
+            qDebug() << "FocusChangedEvent Received! " + normalizeString(bstrToQString(eventName));
+        }
+    }
+
+    else{
+        pSender->get_CurrentName(&eventName);
+
+        eventDetected_focusChange->insert("EventID", "FocusChangedEvent");
+        eventDetected_focusChange->insert("EventName", normalizeString(bstrToQString(eventName)));
+        qDebug() << "FocusChangedEvent Received! " + normalizeString(bstrToQString(eventName));
+    }
+
     return S_OK;
 }
 

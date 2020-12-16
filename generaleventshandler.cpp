@@ -14,29 +14,28 @@ GeneralEventsHandler::GeneralEventsHandler( QVariantMap &eventDetected_addr, con
 
 DWORD GeneralEventsHandler::findProcessIdByName( const QString &processName ){
     PROCESSENTRY32 processInfo;
-    processInfo.dwSize = sizeof(PROCESSENTRY32);
+    processInfo.dwSize = sizeof(processInfo);
 
     HANDLE processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-    if ( processesSnapshot == INVALID_HANDLE_VALUE ) {
-        CloseHandle(processesSnapshot);
-        return 0;
+    if (processesSnapshot == INVALID_HANDLE_VALUE) {
+        return FALSE;
     }
 
     Process32First(processesSnapshot, &processInfo);
-    if ( !processName.compare(processInfo.szExeFile) ){
+    if (!processName.compare(processInfo.szExeFile)){
         CloseHandle(processesSnapshot);
         return processInfo.th32ProcessID;
     }
 
-    while ( Process32Next(processesSnapshot, &processInfo) ){
-        if ( !processName.compare(processInfo.szExeFile) ){
+    while (Process32Next(processesSnapshot, &processInfo)){
+        if (!processName.compare(processInfo.szExeFile)){
             CloseHandle(processesSnapshot);
             return processInfo.th32ProcessID;
         }
     }
 
     CloseHandle(processesSnapshot);
-    return 0;
+    return FALSE;
 }
 
 void GeneralEventsHandler::addEventsToIdentify( const QList<QString> &q ){
@@ -80,7 +79,6 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::QueryInterface( REFIID riid, voi
 // IUIAutomationEventHandler methods
 HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent( IUIAutomationElement * pSender, EVENTID eventID ){
     BSTR eventName;
-    QString eventID_qstr;
 
     auto bstrToQString = []( const BSTR &b ){
         std::wstring step1(b);
@@ -99,25 +97,27 @@ HRESULT STDMETHODCALLTYPE GeneralEventsHandler::HandleAutomationEvent( IUIAutoma
 
     if(this->eventsByAppName.first){
         long target_pid = findProcessIdByName(this->eventsByAppName.second);
-        //int target_pid = 0;
-        BSTR catched_description;
+        int pSender_catchedPid;
 
-        pSender->get_CurrentProviderDescription(&catched_description);
+        pSender->get_CurrentProcessId(&pSender_catchedPid);
 
-        auto qstr_targetPid = QString::number(target_pid);
-        auto qstr_catchedDescription = bstrToQString(catched_description);
+        if(pSender_catchedPid == (int)target_pid){
+            qDebug() << "by event PID: " + QString::number(target_pid);
+            pSender->get_CurrentName(&eventName);
+            eventDetected_general->insert("EventID", mUIAutoEvents->key(eventID));
+            eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
+            qDebug() <<  mUIAutoEvents->key(eventID) + " Received! " + normalizeString(bstrToQString(eventName));
 
-        if(qstr_catchedDescription.contains(qstr_targetPid)){
             qDebug() << "Works!";
         }
     }
+    else{
+        pSender->get_CurrentName(&eventName);
+        eventDetected_general->insert("EventID", mUIAutoEvents->key(eventID));
+        eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
+        qDebug() <<  mUIAutoEvents->key(eventID) + " Received! " + normalizeString(bstrToQString(eventName));
+    }
 
-    //eventDetected_general->insert("EventID", mUIAutoEvents->key(eventID));
-    //eventDetected_general->insert("EventName", normalizeString(bstrToQString(eventName)));
-    //qDebug() <<  mUIAutoEvents->key(eventID) + " Received! " + normalizeString(bstrToQString(eventName));
-
-    //pSender->Release();
-    //Sleep(1000);
     return S_OK;
 }
 
