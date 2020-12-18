@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     /* Create an event listener 
        you can also limit the listener to specific programs,
-       like: WinEventListener *listener = new WinEventListener("soffice.bin);
+       like: WinEventListener *listener = new WinEventListener("soffice.bin");
        to watch LibreOffice events
     */
     WinEventListener *listener = new WinEventListener();
